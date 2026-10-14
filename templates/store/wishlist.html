@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="wishlist-page">
+    <div class="wishlist-header">
+        <div>
+            <h1>My Wishlist <span>♥</span></h1>
+            <p>Your favorite products, all in one place.</p>
+        </div>
+        <a href="{% url 'store:home' %}" class="wishlist-continue">
+            Continue Shopping
+        </a>
+    </div>
+
+    {% if wishlist_items %}
+        <div class="wishlist-grid">
+            {% for item in wishlist_items %}
+                <article class="wishlist-card">
+                    <a
+                        href="{% url 'store:product_detail' item.product.pk %}"
+                        class="wishlist-image-link"
+                    >
+                        {% if item.product.image %}
+                            <img
+                                src="{{ item.product.image.url }}"
+                                alt="{{ item.product.name }}"
+                                class="wishlist-image"
+                                loading="lazy"
+                            >
+                        {% else %}
+                            <div class="wishlist-no-image">
+                                No image available
+                            </div>
+                        {% endif %}
+                    </a>
+
+                    <div class="wishlist-card-content">
+                        <h2>
+                            <a href="{% url 'store:product_detail' item.product.pk %}">
+                                {{ item.product.name }}
+                            </a>
+                        </h2>
+
+                        <p class="wishlist-category">
+                            {{ item.product.category }}
+                        </p>
+
+                        <p class="wishlist-price">
+                            ₹{{ item.product.price|floatformat:2 }}
+                        </p>
+
+                        {% if item.product.stock > 0 and item.product.is_active %}
+                            <p class="wishlist-stock in-stock">
+                                In stock
+                            </p>
+                        {% else %}
+                            <p class="wishlist-stock out-of-stock">
+                                Currently unavailable
+                            </p>
+                        {% endif %}
+
+                        <div class="wishlist-actions">
+                            {% if item.product.stock > 0 and item.product.is_active %}
+                                <form
+                                    method="post"
+                                    action="{% url 'store:cart_add' item.product.pk %}"
+                                >
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="wishlist-cart-btn">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled class="wishlist-cart-btn">
+                                    Unavailable
+                                </button>
+                            {% endif %}
+
+                            <form
+                                method="post"
+                                action="{% url 'store:wishlist_remove' item.pk %}"
+                            >
+                                {% csrf_token %}
+                                <button
+                                    type="submit"
+                                    class="wishlist-remove-btn"
+                                    aria-label="Remove {{ item.product.name }} from wishlist"
+                                >
+                                    ♥ Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="wishlist-empty">
+            <div class="wishlist-empty-heart">♡</div>
+            <h2>Your wishlist is empty</h2>
+            <p>Explore our store and save the products you love.</p>
+            <a href="{% url 'store:home' %}" class="wishlist-shop-btn">
+                Explore Products
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

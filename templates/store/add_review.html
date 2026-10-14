@@ -1,0 +1,71 @@
+
+{% extends "base.html" %}
+
+{% block title %}Write a Review | NovaCart{% endblock %}
+
+{% block content %}
+<section class="review-page">
+    <div class="review-container">
+        <a href="{% url 'store:product_detail' product.pk %}"
+           class="review-back-link">
+            ← Back to Product
+        </a>
+
+        <h1>
+            {% if existing_review %}
+                Edit Your Review
+            {% else %}
+                Write a Review
+            {% endif %}
+        </h1>
+
+        <p class="review-product-name">
+            Product: <strong>{{ product.name }}</strong>
+        </p>
+
+        {% if existing_review %}
+            <p>You can update your previous rating and review below.</p>
+        {% else %}
+            <p>Share your experience to help other customers.</p>
+        {% endif %}
+
+        <form method="post" class="review-form">
+            {% csrf_token %}
+
+            <div class="review-field">
+                <label for="{{ form.rating.id_for_label }}">
+                    Your Rating
+                </label>
+                {{ form.rating }}
+                {% for error in form.rating.errors %}
+                    <p class="review-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="review-field">
+                <label for="{{ form.comment.id_for_label }}">
+                    Your Review
+                </label>
+                {{ form.comment }}
+                {% for error in form.comment.errors %}
+                    <p class="review-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="review-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="review-submit-button">
+                {% if existing_review %}
+                    Update Review
+                {% else %}
+                    Submit Review
+                {% endif %}
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

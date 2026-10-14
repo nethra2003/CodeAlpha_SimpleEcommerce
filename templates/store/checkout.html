@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+
+{% block title %}Checkout | NovaCart{% endblock %}
+
+{% block content %}
+<section class="shop-section">
+    <h1>Checkout</h1>
+    <p>Review your items and provide your delivery address.</p>
+
+    {% for item in items %}
+        <article class="product-card product-info">
+            <h3>{{ item.product.name }}</h3>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Subtotal: ₹{{ item.subtotal }}</p>
+        </article>
+    {% endfor %}
+
+    <h2>Order total: ₹{{ total }}</h2>
+
+    <form method="post" action="{% url 'store:checkout' %}">
+        {% csrf_token %}
+
+        <label for="delivery_address">Delivery address</label>
+        <textarea
+            id="delivery_address"
+            name="delivery_address"
+            rows="4"
+            required
+            maxlength="2000"
+        ></textarea>
+
+        <button class="button" type="submit">
+            Place Order — Cash on Delivery
+        </button>
+    </form>
+</section>
+{% endblock %}

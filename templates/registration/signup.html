@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account | NovaCart{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <p class="eyebrow">JOIN NOVACART</p>
+        <h1>Create your account</h1>
+        <p class="auth-description">
+            Sign up to shop and manage your orders.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="form-error">
+                    Please correct the errors below.
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <small>{{ field.help_text|safe }}</small>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+
+            <button type="submit" class="button auth-submit">
+                Create Account
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

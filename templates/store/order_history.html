@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders | NovaCart{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+
+    <!-- Page Heading -->
+    <div class="cart-heading">
+        <p class="section-eyebrow">YOUR ACCOUNT</p>
+        <h1>My Orders</h1>
+        <p>View your previous purchases and order status.</p>
+    </div>
+
+    <!-- Order List -->
+    {% if orders %}
+        <div class="order-list">
+
+            {% for order in orders %}
+                <article class="cart-item">
+                    <div class="cart-item-details">
+
+                        <h2>Order #{{ order.order_number }}</h2>
+
+                        <p>
+                            <strong>Order Date:</strong>
+                            {{ order.created_at|date:"d M Y, h:i A" }}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            <span class="order-status status-{{ order.status|lower }}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Order Total:</strong>
+                            ₹{{ order.total_amount|floatformat:2 }}
+                        </p>
+
+                        <h3>Items</h3>
+
+                        {% for item in order.items.all %}
+                            <p>
+                                {{ item.product.name }} —
+                                {{ item.quantity }} ×
+                                ₹{{ item.unit_price|floatformat:2 }}
+                            </p>
+                        {% endfor %}
+
+                        <!-- View Order Details -->
+                        <a
+                            class="checkout-button order-details-button"
+                            href="{% url 'store:order_confirmation' order.pk %}"
+                        >
+                            View Order Details
+                        </a>
+
+                        <!-- Track Order -->
+                        <a
+                            href="{% url 'store:track_order' order.pk %}"
+                            class="track-order-button"
+                        >
+                            📦 Track Order
+                        </a>
+
+                        <!-- Cancel Order -->
+                        {% if order.status == "PENDING" or order.status == "CONFIRMED" %}
+                            <form
+                                method="post"
+                                action="{% url 'store:cancel_order' order.pk %}"
+                                onsubmit="return confirm('Are you sure you want to cancel this order?');"
+                                class="cancel-order-form"
+                            >
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="cancel-order-button"
+                                >
+                                    Cancel Order
+                                </button>
+                            </form>
+                        {% endif %}
+
+                    </div>
+                </article>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- Empty Orders -->
+        <div class="empty-cart">
+            <h2>No orders yet</h2>
+            <p>Your orders will appear here after you place an order.</p>
+
+            <a
+                href="{% url 'store:home' %}#products"
+                class="checkout-button"
+            >
+                Start Shopping
+            </a>
+        </div>
+
+    {% endif %}
+
+</section>
+{% endblock %}

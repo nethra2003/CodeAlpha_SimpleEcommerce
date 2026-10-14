@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart | NovaCart{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+
+    <div class="cart-heading">
+        <p class="section-eyebrow">YOUR NOVACART BAG</p>
+        <h1>Your Shopping Cart</h1>
+    </div>
+
+    {% if items %}
+        <div class="cart-layout">
+
+            <div class="cart-items">
+                {% for item in items %}
+                    <article class="cart-item">
+
+                        <div class="cart-item-image">
+                            {% if item.product.image %}
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product.name }}"
+                                >
+                            {% else %}
+                                <div class="cart-no-image">No image</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="cart-item-details">
+                            <h2>{{ item.product.name }}</h2>
+                            <p class="cart-category">
+                                {{ item.product.category }}
+                            </p>
+                            <p>Price: ₹{{ item.product.price|floatformat:2 }}</p>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p class="cart-subtotal">
+                                Subtotal: ₹{{ item.subtotal|floatformat:2 }}
+                            </p>
+
+                            <form
+                                method="post"
+                                action="{% url 'store:cart_remove' item.product.pk %}"
+                            >
+                                {% csrf_token %}
+                                <button type="submit" class="cart-remove">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+
+                    </article>
+                {% endfor %}
+            </div>
+
+            <aside class="cart-summary">
+                <h2>Order Summary</h2>
+
+                <div class="summary-row">
+                    <span>Items</span>
+                    <span>{{ items|length }}</span>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Order Total</span>
+                    <span>₹{{ total|floatformat:2 }}</span>
+                </div>
+
+                <a href="{% url 'store:checkout' %}"
+                   class="checkout-button">
+                    Proceed to Checkout
+                </a>
+
+                <a href="{% url 'store:home' %}#products"
+                   class="continue-shopping">
+                    Continue Shopping
+                </a>
+            </aside>
+
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <h2>Your cart is empty</h2>
+            <p>Discover something you'll love.</p>
+            <a href="{% url 'store:home' %}#products"
+               class="checkout-button">
+                Start Shopping
+            </a>
+        </div>
+    {% endif %}
+
+</section>
+{% endblock %}

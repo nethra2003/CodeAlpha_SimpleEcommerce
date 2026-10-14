@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed | NovaCart{% endblock %}
+
+{% block content %}
+<section class="shop-section order-confirmation">
+
+    <div class="confirmation-header">
+        <p class="eyebrow">ORDER SUCCESSFUL</p>
+        <h1>Thank you for your order!</h1>
+        <p>Your order has been recorded successfully.</p>
+    </div>
+
+    <div class="order-summary">
+        <h2>Order Details</h2>
+
+        <p>
+            <strong>Order Number:</strong>
+            {{ order.order_number }}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ order.get_status_display }}
+        </p>
+
+        <p>
+            <strong>Total payable on delivery:</strong>
+            ₹{{ order.total_amount|floatformat:2 }}
+        </p>
+
+        <p>
+            <strong>Delivery Address:</strong>
+            {{ order.delivery_address }}
+        </p>
+    </div>
+
+    <h2>Items Ordered</h2>
+
+    <div class="order-items">
+        {% for item in order.items.all %}
+        <article class="product-card product-info order-item">
+
+            <h3>{{ item.product.name }}</h3>
+
+            <p>
+                Quantity: {{ item.quantity }}
+            </p>
+
+            <p>
+                Unit Price: ₹{{ item.unit_price|floatformat:2 }}
+            </p>
+
+            <p>
+                Subtotal:
+                ₹{% widthratio item.unit_price 1 item.quantity %}
+            </p>
+
+        </article>
+        {% empty %}
+        <p>No items were found for this order.</p>
+        {% endfor %}
+    </div>
+
+    <div class="order-actions">
+        <a class="button" href="{% url 'store:order_history' %}">
+            View My Orders
+        </a>
+
+        <a class="back-link" href="{% url 'store:home' %}">
+            Continue Shopping
+        </a>
+    </div>
+
+</section>
+{% endblock %}

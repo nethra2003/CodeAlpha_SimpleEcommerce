@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}NovaCart | Shop Smart{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<section class="nova-hero">
+    <a href="#products" aria-label="Explore the NovaCart collection">
+        <img
+            src="{% static 'images/hero-banner.jpg' %}"
+            alt="Discover everyday essentials at NovaCart"
+            fetchpriority="high"
+            decoding="async"
+        >
+    </a>
+</section>
+
+<!-- Categories -->
+<section class="shop-section nova-categories" id="categories">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">EXPLORE OUR COLLECTION</p>
+            <h2>Shop by Category</h2>
+            <p>Find something you love in every collection.</p>
+        </div>
+    </div>
+
+    <div class="category-grid">
+
+        <a href="?category=Electronics#products" class="category-card">
+            <img
+                src="{% static 'images/category-electronics.jpg' %}"
+                alt="Electronics"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Electronics</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Fashion#products" class="category-card">
+            <img
+                src="{% static 'images/category-fashion.jpg' %}"
+                alt="Fashion"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Fashion</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Home%20%26%20Living#products" class="category-card">
+            <img
+                src="{% static 'images/category-home-living.jpg' %}"
+                alt="Home and Living"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Home &amp; Living</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Beauty%20%26%20Personal%20Care#products" class="category-card">
+            <img
+                src="{% static 'images/category-beauty-personal-care.jpg' %}"
+                alt="Beauty and Personal Care"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Beauty &amp; Care</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Toys%20%26%20Games#products" class="category-card">
+            <img
+                src="{% static 'images/category-toys-games.jpg' %}"
+                alt="Toys and Games"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Toys &amp; Games</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Books#products" class="category-card">
+            <img
+                src="{% static 'images/category-books.jpg' %}"
+                alt="Books"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Books</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Kitchen%20%26%20Dining#products" class="category-card">
+            <img
+                src="{% static 'images/category-kitchen-dining.jpg' %}"
+                alt="Kitchen and Dining"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Kitchen &amp; Dining</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+        <a href="?category=Sports%20%26%20Fitness#products" class="category-card">
+            <img
+                src="{% static 'images/category-sports-fitness.jpg' %}"
+                alt="Sports and Fitness"
+                loading="lazy"
+                decoding="async"
+            >
+            <div class="category-overlay">
+                <h3>Sports &amp; Fitness</h3>
+                <span>Explore collection →</span>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+<!-- Product Catalog -->
+<section class="shop-section catalog-section" id="products">
+
+    <div class="section-heading catalog-heading">
+        <div>
+            <p class="section-eyebrow">MADE FOR YOUR EVERYDAY</p>
+            <h2>Our Products</h2>
+            <p>Discover quality products at great prices.</p>
+        </div>
+
+        {% if page_obj %}
+            <span class="product-count">
+                {{ page_obj.paginator.count }} products
+            </span>
+        {% else %}
+            <span class="product-count">
+                {{ products|length }} products
+            </span>
+        {% endif %}
+    </div>
+
+    <!-- Search and Filters -->
+    <form method="get" action="#products" class="product-filter-form">
+
+        <div class="search-box">
+            <input
+                type="search"
+                name="q"
+                placeholder="Search products..."
+                value="{{ request.GET.q|default:'' }}"
+                aria-label="Search products"
+            >
+            <button type="submit">Search</button>
+        </div>
+
+<select name="category" aria-label="Filter by category">
+    <option value="">All Categories</option>
+
+    <option value="Electronics"
+        {% if request.GET.category == "Electronics" %}selected{% endif %}>
+        Electronics
+    </option>
+
+    <option value="Fashion"
+        {% if request.GET.category == "Fashion" %}selected{% endif %}>
+        Fashion
+    </option>
+
+    <option value="Home & Living"
+        {% if request.GET.category == "Home & Living" %}selected{% endif %}>
+        Home &amp; Living
+    </option>
+
+    <option value="Beauty & Personal Care"
+        {% if request.GET.category == "Beauty & Personal Care" %}selected{% endif %}>
+        Beauty &amp; Personal Care
+    </option>
+
+    <option value="Toys & Games"
+        {% if request.GET.category == "Toys & Games" %}selected{% endif %}>
+        Toys &amp; Games
+    </option>
+
+    <option value="Books"
+        {% if request.GET.category == "Books" %}selected{% endif %}>
+        Books
+    </option>
+
+    <option value="Kitchen & Dining"
+        {% if request.GET.category == "Kitchen & Dining" %}selected{% endif %}>
+        Kitchen &amp; Dining
+    </option>
+
+    <option value="Sports & Fitness"
+        {% if request.GET.category == "Sports & Fitness" %}selected{% endif %}>
+        Sports &amp; Fitness
+    </option>
+</select>
+
+        <select name="sort" aria-label="Sort products">
+            <option value="">Newest First</option>
+            <option value="price_low"
+                {% if request.GET.sort == "price_low" %}selected{% endif %}>
+                Price: Low to High
+            </option>
+            <option value="price_high"
+                {% if request.GET.sort == "price_high" %}selected{% endif %}>
+                Price: High to Low
+            </option>
+            <option value="name"
+                {% if request.GET.sort == "name" %}selected{% endif %}>
+                Name: A to Z
+            </option>
+        </select>
+
+        <button type="submit" class="filter-button">Apply Filters</button>
+
+        {% if request.GET.q or request.GET.category or request.GET.sort %}
+            <a href="{% url 'store:home' %}#products" class="clear-filters">
+                Clear
+            </a>
+        {% endif %}
+
+    </form>
+
+    <!-- Product Grid -->
+    {% if products %}
+        <div class="product-grid">
+
+            {% for product in products %}
+                <article class="product-card">
+
+                    <a
+                        href="{% url 'store:product_detail' product.pk %}"
+                        class="product-image-link"
+                        aria-label="View {{ product.name }}"
+                    >
+                        {% if product.image %}
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        {% else %}
+                            <div class="product-image-placeholder">
+                                <span>No image available</span>
+                            </div>
+                        {% endif %}
+                    </a>
+
+                    <div class="product-info">
+
+                        {% if product.category %}
+                            <span class="product-category">
+                                {{ product.category }}
+                            </span>
+                        {% endif %}
+
+                        <h3 class="product-name">
+                            <a href="{% url 'store:product_detail' product.pk %}">
+                                {{ product.name }}
+                            </a>
+                        </h3>
+
+                        {% if product.total_reviews %}
+                            <div class="product-rating">
+                                <span class="rating-stars">★</span>
+                                <strong>{{ product.average_rating|floatformat:1 }}/5</strong>
+                                <span class="rating-count">
+                                    ({{ product.total_reviews }}
+                                    review{{ product.total_reviews|pluralize }})
+                                </span>
+                            </div>
+                        {% else %}
+                            <p class="no-product-rating">No reviews yet</p>
+                        {% endif %}
+
+                        <p class="product-description">
+                            {{ product.description|truncatewords:14 }}
+                        </p>
+
+                        <div class="product-card-bottom">
+                            <span class="product-price">
+                                ₹{{ product.price|floatformat:2 }}
+                            </span>
+
+                            {% if product.stock > 0 %}
+                                <span class="stock-status in-stock">
+                                    In Stock
+                                </span>
+                            {% else %}
+                                <span class="stock-status out-of-stock">
+                                    Out of Stock
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {% if product.stock > 0 %}
+                            <form
+                                method="post"
+                                action="{% url 'store:cart_add' product.pk %}"
+                                class="add-to-cart-form"
+                            >
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="add-to-cart-button">
+                                    Add to Cart
+                                </button>
+                            </form>
+                        {% else %}
+                            <button
+                                type="button"
+                                class="add-to-cart-button disabled-button"
+                                disabled
+                            >
+                                Currently Unavailable
+                            </button>
+                        {% endif %}
+                        
+                        {% if user.is_authenticated %}
+                            <form method="post"
+                                  action="{% url 'store:wishlist_add' product.pk %}"
+                                  class="wishlist-card-form">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="wishlist-card-heart"
+                                                aria-label="Add {{ product.name }} to wishlist"
+                                                title="Add to Wishlist">
+                                            ♥ Wishlist
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj and page_obj.has_other_pages %}
+            <nav class="pagination" aria-label="Product pages">
+
+                {% if page_obj.has_previous %}
+                    <a
+                        class="pagination-link"
+                        href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}&sort={{ request.GET.sort|urlencode }}#products"
+                    >
+                        ← Previous
+                    </a>
+                {% else %}
+                    <span class="pagination-link disabled">← Previous</span>
+                {% endif %}
+
+                <span class="pagination-info">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a
+                        class="pagination-link"
+                        href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}&sort={{ request.GET.sort|urlencode }}#products"
+                    >
+                        Next →
+                    </a>
+                {% else %}
+                    <span class="pagination-link disabled">Next →</span>
+                {% endif %}
+
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="empty-products">
+            <h3>No products found</h3>
+            <p>Try another search term or choose a different category.</p>
+            <a href="{% url 'store:home' %}" class="continue-shopping">
+                View All Products
+            </a>
+        </div>
+    {% endif %}
+
+</section>
+
+{% endblock %}

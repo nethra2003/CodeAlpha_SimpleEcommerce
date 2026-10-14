@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Track Order | NovaCart{% endblock %}
+
+{% block content %}
+<section class="tracking-page">
+    <div class="tracking-header">
+        <a href="{% url 'store:order_history' %}" class="tracking-back">
+            ← Back to My Orders
+        </a>
+
+        <h1>Track Your Order</h1>
+        <p>Follow your NovaCart order's progress.</p>
+    </div>
+
+    <div class="tracking-order-card">
+        <div class="tracking-order-heading">
+            <div>
+                <p class="tracking-label">Order Number</p>
+                <h2>{{ order.order_number }}</h2>
+            </div>
+
+            <div class="tracking-status status-{{ order.status|lower }}">
+                {{ order.get_status_display }}
+            </div>
+        </div>
+
+        <div class="tracking-order-details">
+            <div>
+                <span>Order Date</span>
+                <strong>{{ order.created_at|date:"d M Y, h:i A" }}</strong>
+            </div>
+
+            <div>
+                <span>Total Amount</span>
+                <strong>₹{{ order.total_amount|floatformat:2 }}</strong>
+            </div>
+        </div>
+    </div>
+
+    {% if order.status == "CANCELLED" %}
+        <div class="tracking-cancelled">
+            <span class="tracking-cancelled-icon">✕</span>
+            <div>
+                <h2>Order Cancelled</h2>
+                <p>This order has been cancelled and will not proceed to delivery.</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="tracking-timeline-card">
+            <h2>Delivery Progress</h2>
+
+            <div class="tracking-timeline">
+                {% for step in tracking_steps %}
+                    <div class="tracking-step
+                        {% if forloop.counter0 < current_step %}completed{% endif %}
+                        {% if forloop.counter0 == current_step %}current{% endif %}">
+
+                        <div class="tracking-step-marker">
+                            {% if forloop.counter0 < current_step %}
+                                ✓
+                            {% else %}
+                                {{ forloop.counter }}
+                            {% endif %}
+                        </div>
+
+                        <div class="tracking-step-content">
+                            <h3>{{ step.label }}</h3>
+                            <p>{{ step.description }}</p>
+
+                            {% if forloop.counter0 == current_step %}
+                                <span class="tracking-current-label">
+                                    Current Status
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="tracking-items-card">
+        <h2>Items in This Order</h2>
+
+        {% for item in order.items.all %}
+            <div class="tracking-item">
+                <div class="tracking-item-info">
+                    <strong>{{ item.product.name }}</strong>
+                    <span>Quantity: {{ item.quantity }}</span>
+                </div>
+
+                <strong>
+                    ₹{{ item.unit_price|floatformat:2 }}
+                </strong>
+            </div>
+        {% empty %}
+            <p>No order items are available.</p>
+        {% endfor %}
+    </div>
+
+    <div class="tracking-footer">
+        <a href="{% url 'store:order_history' %}" class="tracking-button">
+            View All Orders
+        </a>
+
+        <a href="{% url 'store:home' %}" class="tracking-secondary-button">
+            Continue Shopping
+        </a>
+    </div>
+</section>
+{% endblock %}
